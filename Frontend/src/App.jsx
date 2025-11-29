@@ -8,9 +8,6 @@ import "highlight.js/styles/github-dark.css";
 import axios from 'axios'
 import './App.css'
 
-// Use environment variable in production; fall back to localhost for dev.
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:3000";
-
 function App() {
   const [ count, setCount ] = useState(0)
   const [ code, setCode ] = useState(` function sum() {
@@ -24,38 +21,8 @@ function App() {
   }, [])
 
   async function reviewCode() {
-    try {
-      const { data } = await axios.post(`${BASE_URL}/ai/get-review`, { code }, {
-        headers: { "Content-Type": "application/json" },
-        timeout: 20000
-      })
-      console.log("API returned:", data)
-
-      const text = typeof data === 'string'
-        ? data
-        : data?.response ?? data?.markdown ?? data?.review ?? data?.message ?? JSON.stringify(data, null, 2)
-
-      setReview(typeof text === 'string' ? text : JSON.stringify(data, null, 2))
-    } catch (err) {
-      console.error("reviewCode error:", err)
-      if (err?.response) {
-        console.error("Server status:", err.response.status)
-        console.error("Server response:", err.response.data)
-        const serverMsg =
-          (typeof err.response.data === "string" && err.response.data) ||
-          err.response.data?.error ||
-          err.response.data?.message ||
-          JSON.stringify(err.response.data, null, 2)
-        setReview(`Server responded ${err.response.status}: ${serverMsg}`)
-        return
-      }
-      if (err?.request) {
-        console.error("No response received. Request object:", err.request)
-        setReview("Network error: no response received from backend. Check console for more details.")
-        return
-      }
-      setReview(`Error: ${err?.message ?? "Unknown error"}`)
-    }
+    const response = await axios.post('http://localhost:3000/ai/get-review', { code })
+    setReview(response.data)
   }
 
   return (
@@ -84,12 +51,16 @@ function App() {
         </div>
         <div className="right">
           <Markdown
+
             rehypePlugins={[ rehypeHighlight ]}
+
           >{review}</Markdown>
         </div>
       </main>
     </>
   )
 }
+
+
 
 export default App
