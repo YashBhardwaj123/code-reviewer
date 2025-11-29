@@ -21,9 +21,8 @@ function App() {
   }, [])
 
   async function reviewCode() {
-    // frontend
-await axios.post("https://code-reviewer-ip2g.onrender.com/ai/get-review", { code });
-  setReview(response.data)
+    const response = await axios.post('http://localhost:3000/ai/get-review', { code })
+    setReview(response.data)
   }
 
   return (
