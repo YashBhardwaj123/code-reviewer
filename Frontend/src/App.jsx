@@ -7,9 +7,9 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import axios from 'axios'
 import './App.css'
+import { API_BASE } from './config'
 
 function App() {
-  const [ count, setCount ] = useState(0)
   const [ code, setCode ] = useState(` function sum() {
   return 1 + 1
 }`)
@@ -21,8 +21,15 @@ function App() {
   }, [])
 
   async function reviewCode() {
-    const response = await axios.post('http://localhost:3000/ai/get-review', { code })
-    setReview(response.data)
+    try {
+      const apiBase = API_BASE
+      const response = await axios.post(`${apiBase}/ai/get-review`, { code })
+      const data = response.data
+      setReview(data.review ?? data)
+    } catch (err) {
+      console.error(err)
+      setReview('Error fetching review. See console for details.')
+    }
   }
 
   return (
