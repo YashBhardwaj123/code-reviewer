@@ -28,7 +28,11 @@ function App() {
       setReview(data.review ?? data)
     } catch (err) {
       console.error(err)
-      setReview('Error fetching review. See console for details.')
+      if (err.response && err.response.status === 429) {
+        setReview('Too many requests. Please wait a few minutes and try again.')
+      } else {
+        setReview('Error fetching review. See console for details.')
+      }
     }
   }
 
