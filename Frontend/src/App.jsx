@@ -10,11 +10,11 @@ import './App.css'
 import { API_BASE } from './config'
 
 function App() {
-  const [ code, setCode ] = useState(` function sum() {
-  return 1 + 1
-}`)
+  const [ code, setCode ] = useState(` /* please write your function(code) here */
+`)
 
   const [ review, setReview ] = useState(``)
+  const [ isLoading, setIsLoading ] = useState(false)
 
   useEffect(() => {
     prism.highlightAll()
@@ -22,6 +22,7 @@ function App() {
 
   async function reviewCode() {
     try {
+      setIsLoading(true)
       const apiBase = API_BASE
       const response = await axios.post(`${apiBase}/ai/get-review`, { code })
       const data = response.data
@@ -33,6 +34,8 @@ function App() {
       } else {
         setReview('Error fetching review. See console for details.')
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -61,11 +64,11 @@ function App() {
             className="review">Review</div>
         </div>
         <div className="right">
-          <Markdown
-
-            rehypePlugins={[ rehypeHighlight ]}
-
-          >{review}</Markdown>
+          {isLoading ? (
+            <span className='ldr'>Loading...</span>
+          ) : (
+            <Markdown rehypePlugins={[ rehypeHighlight ]}>{review}</Markdown>
+          )}
         </div>
       </main>
     </>

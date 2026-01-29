@@ -1,3 +1,5 @@
+@plugin "daisyui";
+
 * {
   margin: 0%;
   padding: 0%;
@@ -60,4 +62,19 @@ main .right {
   padding: 1rem 2rem;
   font-size: 1.5rem;
   overflow: auto;
+}
+
+span.ldr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+@keyframes ldr {
+  0%{opacity: 1;}
+  33%{opacity: 0.0;}
+  66%{opacity: 0.0;}
+  100%{opacity: 1;}
 }
