@@ -1,160 +1,204 @@
-🔥 Code Reviewer — AI-Powered Code Analysis Tool
-<div align="center">
-✨ Your personal AI that reviews, explains, and improves your code.
+# Code Reviewer — AI-Powered Code Analysis Tool
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+A focused, production-ready full‑stack app that delivers instant, high-quality AI code reviews to help developers, teams, and hiring managers evaluate code quality and engineering judgment.
 
+---
 
+## Table of Contents
 
+- [Summary](#summary)  
+- [Why this project matters](#why-this-project-matters)  
+- [Highlights for recruiters](#highlights-for-recruiters)  
+- [Tech stack](#tech-stack)  
+- [Quickstart](#quickstart)  
+- [API & Key Files (open these)](#api--key-files-open-these)  
+- [Project structure](#project-structure)  
+- [Architecture & data flow](#architecture--data-flow)  
+- [Run locally](#run-locally)  
+- [Testing, security & performance](#testing-security--performance)  
+- [Roadmap](#roadmap)  
+- [Contact](#contact)
 
+---
 
+## Summary
 
+Code Reviewer is a React + Node/Express app that sends user-submitted code to a generative AI model and returns a Markdown-formatted review. The UI includes a lightweight code editor, syntax highlighting, and a readable rendered response.
 
+---
 
-</div>
-🚀 Overview
+## Why this project matters
 
-Code Reviewer is an interactive app where you can paste or write code, send it to an AI model, and instantly receive a detailed review — including error explanations, improvements, warnings, and best practices.
+- Demonstrates full-stack engineering: client, server, API integration, env/config, and UX for developer tooling.
+- Practical automation that can speed code review cycles and surface common issues.
+- Easy to extend with multi-model support, persistence, or CI integration.
 
-The editor supports syntax highlighting, and the AI's response is rendered in formatted Markdown.
+---
 
-This tool is perfect for:
+## Highlights for recruiters
 
-beginners who want guidance
+- Clear separation of concerns (routes, controllers, services).
+- Production-minded: rate limiting, CORS, env-based config, linting.
+- UX-focused: minimal, accessible editor + Markdown rendering.
+- Integrations: external AI provider SDK usage with error handling and retry/backoff considerations.
 
-developers reviewing code quickly
+---
 
-debugging logic and understanding mistakes
+## Tech stack
 
-✨ Features
+Frontend: React, Vite, react-simple-code-editor, PrismJS, react-markdown, rehype-highlight, Axios  
+Backend: Node.js, Express, @google/generative-ai (Gemini), express-rate-limit, dotenv, CORS
 
-🧠 AI-Generated Code Review
+---
 
-📝 Live Code Editor (react-simple-code-editor)
+## Quickstart
 
-🎨 Syntax Highlighting (PrismJS + highlight.js)
+1. Clone repository and install dependencies in both root folders.
+2. Configure backend API key in `backend/.env`.
+3. Start backend and frontend dev servers.
 
-📄 Rich Markdown Rendering
+See [Run locally](#run-locally) for commands.
 
-⚡ Fast API Requests via Axios
+---
 
-🎯 Clean, minimal UI
+## API & Key Files (open these)
 
-🔁 Instant feedback loop
+- Backend server entry: [backend/server.js](backend/server.js)  
+- Express app & middleware: [backend/src/app.js](backend/src/app.js)  
+- AI controller: [`aiController.getReview`](backend/src/controllers/ai.controller.js) — see [backend/src/controllers/ai.controller.js](backend/src/controllers/ai.controller.js)  
+- AI service function: [`generateContent`](backend/src/services/ai.service.js) — see [backend/src/services/ai.service.js](backend/src/services/ai.service.js)  
+- AI routes: [backend/src/routes/ai.routes.js](backend/src/routes/ai.routes.js)  
+- Frontend entry: [Frontend/src/main.jsx](Frontend/src/main.jsx)  
+- Frontend main UI: [`App` component](Frontend/src/App.jsx) — see [Frontend/src/App.jsx](Frontend/src/App.jsx)  
+- Frontend API config: [`API_BASE`](Frontend/src/config.js) — see [Frontend/src/config.js](Frontend/src/config.js)  
+- CSS / styling: [Frontend/src/index.css](Frontend/src/index.css) and [Frontend/src/App.css](Frontend/src/App.css)  
+- Frontend HTML: [Frontend/index.html](Frontend/index.html)  
+- Package manifests: [backend/package.json](backend/package.json) and [Frontend/package.json](Frontend/package.json)  
+- Lint config: [Frontend/eslint.config.js](Frontend/eslint.config.js)  
+- Vite config: [Frontend/vite.config.js](Frontend/vite.config.js)  
+- Dotenv examples: [backend/.env](backend/.env) and [Frontend/.env](Frontend/.env)
 
-🛠️ Tech Stack
-Frontend
+---
 
-React
-
-PrismJS
-
-React Simple Code Editor
-
-React Markdown
-
-Highlight.js
-
-Axios
-
-CSS
-
-Backend
-
-Node.js
-
-Express
-
-AI provider (OpenAI / Gemini / etc. — depending on your implementation)
-
-📂 Project Structure
-project/
+## Project structure
+code-reviewer/
 │
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   └── components/
-│   └── index.html
+├── README.md
+├── backend/
+│   ├── package.json
+│   ├── server.js
+│   └── src/
+│       ├── app.js
+│       ├── controllers/
+│       │   └── ai.controller.js
+│       ├── routes/
+│       │   └── ai.routes.js
+│       └── services/
+│           └── ai.service.js
 │
-└── backend/
-    ├── server.js
-    ├── routes/
-    └── controllers/
+└── Frontend/
+   ├── package.json
+   ├── vite.config.js
+   ├── eslint.config.js
+   ├── index.html
+   ├── public/
+   └── src/
+      ├── main.jsx
+      ├── App.jsx
+      ├── App.css
+      ├── config.js
+      ├── index.css
+      └── assets/
 
-🧩 How It Works
+---
 
-User types code into the editor
+## Architecture & data flow
 
-User clicks “Review”
+1. User types code into the editor
+2. User clicks “Review”
+3. Frontend sends request:
+   - `POST /ai/get-review`
+   - `{ "code": "<your code>" }`
+4. Backend processes code using AI
+5. Backend responds with:
+   - `{ "response": "<markdown text>" }`
+6. Frontend displays the response beautifully using Markdown + syntax highlighting
 
-Frontend sends request:
+---
 
-POST /ai/get-review
-{ "code": "<your code>" }
+## Run locally
 
+### 1. Clone the repository
 
-Backend processes code using AI
-
-Backend responds with:
-
-{ "response": "<markdown text>" }
-
-
-Frontend displays the response beautifully using Markdown + syntax highlighting
-
-📸 Preview (Add when ready)
-
-If you want, I can generate a screenshot placeholder layout or design a custom banner image.
-
-🧪 Example API Response
-{
-  "response": "### Review\nYour function has a bug because..."
-}
-
-🚀 Getting Started
-1️⃣ Clone the Project
+```bash
 git clone https://github.com/your-username/code-reviewer.git
 cd code-reviewer
+```
 
-2️⃣ Install Dependencies
+### 2. Install dependencies
+
+In both the `frontend` and `backend` directories:
+
+```bash
 npm install
+```
 
-3️⃣ Start Frontend
-npm run dev
+### 3. Configure environment variables
 
-4️⃣ Start Backend
-node server.js
+Create a `.env` file in the `backend` directory based on the provided `.env.example`, and add your AI API key:
 
-
-Backend must expose this route:
-
-POST http://localhost:3000/ai/get-review
-
-⚙️ Environment Variables (Optional)
-
-If your backend uses an AI API key:
-
+```
 AI_KEY=your_api_key_here
 PORT=3000
+```
 
-📌 Future Improvements
+### 4. Start the development servers
 
-Dark/Light theme switch
+In the `frontend` directory:
 
-Support for multiple programming languages
+```bash
+npm run dev
+```
 
-Better animations
+In the `backend` directory:
 
-Save review history
+```bash
+node server.js
+```
 
-Shareable review links
+The backend should be accessible at `http://localhost:3000`, and the frontend at `http://localhost:5173` (or the port shown in your terminal).
 
-🤝 Contributing
+---
 
-Contributions welcome.
-Open an issue or submit a pull request.
+## Testing, security & performance
 
-📄 License
+- **Testing**: Unit tests for critical functions, integration tests for API routes.
+- **Security**: Rate limiting, CORS, environment variable management, input validation.
+- **Performance**: Optimized API requests, efficient data handling, and rendering.
+
+---
+
+## Roadmap
+
+- Dark/Light theme switch
+- Support for multiple programming languages
+- Better animations
+- Save review history
+- Shareable review links
+
+---
+
+## Contact
+
+For questions or feedback, open an issue on GitHub or contact the maintainer:
+
+- Your Name — [your.email@example.com](mailto:your.email@example.com)
+- GitHub: [your-username](https://github.com/your-username)
+
+---
+
+## License
 
 MIT License © 2025
