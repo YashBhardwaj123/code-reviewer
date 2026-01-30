@@ -83,6 +83,7 @@ See [Run locally](#run-locally) for commands.
 ---
 
 ## Project structure
+```
 code-reviewer/
 │
 ├── README.md
@@ -111,7 +112,7 @@ code-reviewer/
       ├── config.js
       ├── index.css
       └── assets/
-
+```
 ---
 
 ## Architecture & data flow
